@@ -429,49 +429,79 @@
       };
     }
 
-    function drawSpiral() {
-      const steps = 700;
+    function drawSpiral() {function shadeColor(hex, percent) {
+  const clean = hex.replace("#", "");
+  let r = parseInt(clean.substring(0, 2), 16);
+  let g = parseInt(clean.substring(2, 4), 16);
+  let b = parseInt(clean.substring(4, 6), 16);
+  r = Math.min(255, Math.max(0, Math.round(r + (percent / 100) * 255)));
+  g = Math.min(255, Math.max(0, Math.round(g + (percent / 100) * 255)));
+  b = Math.min(255, Math.max(0, Math.round(b + (percent / 100) * 255)));
+  return `rgb(${r}, ${g}, ${b})`;
+}
 
-      ctx.lineCap = "round";
-      ctx.lineJoin = "round";
-      ctx.lineWidth = Math.max(11, size * 0.0360);
+function drawSpiral() {
+  const steps = 700;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  const baseWidth = Math.max(22, size * 0.072);
+  const offset = Math.max(2, size * 0.012);
 
-      // まず全体を暗い緑で描画
-      ctx.beginPath();
+  // 影（奥行き）
+  ctx.lineWidth = baseWidth;
+  ctx.beginPath();
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    const p = spiralPoint(t);
+    if (i === 0) ctx.moveTo(p.x + offset, p.y + offset);
+    else ctx.lineTo(p.x + offset, p.y + offset);
+  }
+  ctx.strokeStyle = shadeColor(coilColor, -40);
+  ctx.stroke();
 
-      for (let i = 0; i <= steps; i++) {
-        const t = i / steps;
-        const p = spiralPoint(t);
+  // 本体
+  ctx.beginPath();
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    const p = spiralPoint(t);
+    if (i === 0) ctx.moveTo(p.x, p.y);
+    else ctx.lineTo(p.x, p.y);
+  }
+  ctx.strokeStyle = coilColor;
+  ctx.shadowColor = hexToRgba(coilColor, 0.35);
+  ctx.shadowBlur = 12;
+  ctx.stroke();
+  ctx.shadowBlur = 0;
 
-        if (i === 0) ctx.moveTo(p.x, p.y);
-        else ctx.lineTo(p.x, p.y);
-      }
+  // ハイライト（光の反射）
+  ctx.lineWidth = baseWidth * 0.38;
+  ctx.beginPath();
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    const p = spiralPoint(t);
+    if (i === 0) ctx.moveTo(p.x - offset, p.y - offset);
+    else ctx.lineTo(p.x - offset, p.y - offset);
+  }
+  ctx.strokeStyle = shadeColor(coilColor, 40);
+  ctx.stroke();
+  ctx.lineWidth = baseWidth;
 
-      ctx.strokeStyle = coilColor;
-      ctx.shadowColor = hexToRgba(coilColor, 0.35);
-      ctx.shadowBlur = 12;
-      ctx.stroke();
-      ctx.shadowBlur = 0;
-
-      // 燃焼済み部分を灰色（灰）で表示
-      if (burnProgress > 0) {
-        ctx.beginPath();
-
-        for (let i = 0; i <= steps * burnProgress; i++) {
-          const t = i / steps;
-          const p = spiralPoint(t);
-
-          if (i === 0) ctx.moveTo(p.x, p.y);
-          else ctx.lineTo(p.x, p.y);
-        }
-
-        ctx.strokeStyle = "#8a8f8c";
-        ctx.shadowColor = "rgba(160, 165, 162, 0.35)";
-        ctx.shadowBlur = 10;
-        ctx.stroke();
-        ctx.shadowBlur = 0;
-      }
+  // 燃焼済み部分を灰色（灰）で表示
+  if (burnProgress > 0) {
+    ctx.beginPath();
+    for (let i = 0; i <= steps * burnProgress; i++) {
+      const t = i / steps;
+      const p = spiralPoint(t);
+      if (i === 0) ctx.moveTo(p.x, p.y);
+      else ctx.lineTo(p.x, p.y);
     }
+    ctx.strokeStyle = "#8a8f8c";
+    ctx.shadowColor = "rgba(160, 165, 162, 0.35)";
+    ctx.shadowBlur = 10;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+  }
+}　
 
     function drawEmber() {
       if (!running || finished) return;
