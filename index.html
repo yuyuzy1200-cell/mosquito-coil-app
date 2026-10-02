@@ -119,15 +119,31 @@
     }
 
     .stage {
-      position: relative;
-      width: min(82vw, 430px);
-      aspect-ratio: 1;
-      display: grid;
-      place-items: center;
-      transform: rotate(0deg);
-      transform-origin: 22% 88%;
-      transition: transform 0.2s ease;
-    }
+  position: relative;
+  width: min(82vw, 430px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  transform: rotate(0deg);
+  transform-origin: 22% 88%;
+  transition: transform 0.2s ease;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      rgba(15, 10, 5, 0.4) 0px,
+      rgba(15, 10, 5, 0.4) 3px,
+      transparent 3px,
+      transparent 70px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 235, 205, 0.12) 0px,
+      rgba(255, 235, 205, 0.12) 4px,
+      rgba(0, 0, 0, 0.22) 4px,
+      rgba(0, 0, 0, 0.22) 12px
+    );
+  border-radius: 50%;
+}
 
     .stand {
       position: absolute;
