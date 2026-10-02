@@ -389,7 +389,7 @@
     let smokeLevel = Number(smokeLevelInput.value);
     let smokeTimerId = null;
     let coilColor = coilColorInput.value;
-
+    let viewTiltFactor = 0;
     function hexToRgba(hex, alpha) {
       const clean = hex.replace("#", "");
       const r = parseInt(clean.substring(0, 2), 16);
@@ -446,7 +446,22 @@ function drawSpiral() {
   ctx.lineJoin = "round";
   const baseWidth = Math.max(22, size * 0.072);
   const offset = Math.max(2, size * 0.012);
+const coilThickness = size * 0.05;
+  const extrusion = coilThickness * viewTiltFactor;
 
+  // 側面（見る角度で厚みが出る部分）
+  if (extrusion > 0.5) {
+    ctx.lineWidth = baseWidth;
+    ctx.beginPath();
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps;
+      const p = spiralPoint(t);
+      if (i === 0) ctx.moveTo(p.x, p.y + extrusion);
+      else ctx.lineTo(p.x, p.y + extrusion);
+    }
+    ctx.strokeStyle = shadeColor(coilColor, -55);
+    ctx.stroke();
+  }
   // 影（奥行き）
   ctx.lineWidth = baseWidth;
   ctx.beginPath();
@@ -653,12 +668,12 @@ function drawSpiral() {
       const viewAngle = Number(viewAngleInput.value);
       const squash = 1 - 0.85 * Math.abs(Math.sin((viewAngle * Math.PI) / 180));
 
-      tiltAngleValue.textContent = angle;
-      viewAngleValue.textContent = viewAngle;
-
-      stageEl.style.transform = `rotate(${angle}deg) scaleY(${squash})`;
-      standEl.style.transform = `rotate(${-angle}deg) scaleY(${squash})`;
-    }
+     viewTiltFactor = Math.abs(Math.sin((viewAngle * Math.PI) / 180));
+  tiltAngleValue.textContent = angle;
+  viewAngleValue.textContent = viewAngle;
+  stageEl.style.transform = `rotate(${angle}deg) scaleY(${squash})`;
+  standEl.style.transform = `rotate(${-angle}deg) scaleY(${squash})`;
+  draw();}
 
     tiltAngleInput.addEventListener("input", updateStageTransform);
     viewAngleInput.addEventListener("input", updateStageTransform);
