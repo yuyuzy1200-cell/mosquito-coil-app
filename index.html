@@ -72,11 +72,11 @@
   letter-spacing: 0.3em;
   font-size: clamp(1.6rem, 5vw, 2.4rem);
   font-weight: 700;
-  color: #ffcf9e;
-  text-shadow:
-    0 0 10px rgba(255, 180, 110, 0.9),
-    0 0 24px rgba(255, 130, 80, 0.6),
-    0 0 48px rgba(93, 155, 101, 0.4);
+  background: linear-gradient(135deg, #ffd79a 0%, #ff8c5a 40%, #5d9b65 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 18px rgba(255, 140, 90, 0.35);
   animation: title-glow 4s ease-in-out infinite;
 }
 
@@ -85,9 +85,9 @@
     filter: brightness(1);
   }
   50% {
-    filter: brightness(1.25);
+    filter: brightness(1.2);
   }
-} 
+}
 
 @keyframes title-glow {
   0%, 100% {
