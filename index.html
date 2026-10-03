@@ -39,23 +39,20 @@
       font-family:
         "Yu Gothic", "Hiragino Kaku Gothic ProN",
         system-ui, sans-serif;
-      background:
-  repeating-linear-gradient(
-    180deg,
-    rgba(20, 15, 10, 0.35) 0px,
-    rgba(20, 15, 10, 0.35) 3px,
-    transparent 3px,
-    transparent 140px
-  ),
-  repeating-linear-gradient(
-    90deg,
-    rgba(255, 235, 205, 0.07) 0px,
-    rgba(255, 235, 205, 0.07) 3px,
-    rgba(0, 0, 0, 0.18) 3px,
-    rgba(0, 0, 0, 0.18) 10px
-  ),
-  radial-gradient(circle at 50% 42%, #173c4b 0%, transparent 34%),
-  linear-gradient(145deg, var(--night), #06111e 75%);}
+      .glow {
+  position: absolute;
+  width: 72%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 180, 120, 0.22) 0%,
+    rgba(93, 155, 101, 0.18) 45%,
+    transparent 75%
+  );
+  filter: blur(42px);
+  animation: glow-breathe 5s ease-in-out infinite;
+}
 
     .app {
       width: min(92vw, 680px);
@@ -162,7 +159,7 @@
     }
 
     .glow {
-  position: absolute;
+  position: absolut
   width: 72%;
   aspect-ratio: 1;
   border-radius: 50%;
