@@ -755,7 +755,9 @@
 
     function updateStageTransform() {
   const sliderAngle = Number(tiltAngleInput.value);
-  const angle = sliderAngle;
+  const angle = sliderAngle <= 90
+    ? Math.min(sliderAngle, 82)
+    : Math.max(sliderAngle, 98);
   const viewAngle = Number(viewAngleInput.value);
   const squash = 1 - 0.85 * Math.abs(Math.sin((viewAngle * Math.PI) / 180));
   viewTiltFactor = Math.abs(Math.sin((viewAngle * Math.PI) / 180));
