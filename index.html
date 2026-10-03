@@ -737,20 +737,22 @@
     });
 
     function updateStageTransform() {
-      const angle = Number(tiltAngleInput.value);
-      const viewAngle = Number(viewAngleInput.value);
-      const squash = 1 - 0.85 * Math.abs(Math.sin((viewAngle * Math.PI) / 180));
+  const sliderAngle = Number(tiltAngleInput.value);
+  const angle = sliderAngle <= 90 ? sliderAngle : 180 - sliderAngle;
+  const viewAngle = Number(viewAngleInput.value);
+  const squash = 1 - 0.85 * Math.abs(Math.sin((viewAngle * Math.PI) / 180));
 
-      viewTiltFactor = Math.abs(Math.sin((viewAngle * Math.PI) / 180));
-      doorTiltFactor = Math.abs(Math.sin((angle * Math.PI) / 180));
+  viewTiltFactor = Math.abs(Math.sin((viewAngle * Math.PI) / 180));
+  doorTiltFactor = Math.abs(Math.sin((angle * Math.PI) / 180));
 
-      tiltAngleValue.textContent = angle;
-      viewAngleValue.textContent = viewAngle;
+  tiltAngleValue.textContent = sliderAngle;
+  viewAngleValue.textContent = viewAngle;
 
-      stageEl.style.transform = `rotateY(${angle}deg) scaleY(${squash})`;
-      standEl.style.transform = `rotateY(${-angle}deg) scaleY(${squash})`;
+  stageEl.style.transform = `rotateY(${angle}deg) scaleY(${squash})`;
+  standEl.style.transform = `rotateY(${-angle}deg) scaleY(${squash})`;
 
-      draw();
+  draw();
+}
     }
 
     tiltAngleInput.addEventListener("input", updateStageTransform);
