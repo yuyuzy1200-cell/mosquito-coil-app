@@ -166,11 +166,12 @@
   width: 72%;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(255, 180, 120, 0.22) 0%,
-    rgba(93, 155, 101, 0.18) 45%,
-    transparent 75%
+  background:
+  url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><path d="M20,100 Q50,40 100,60 T180,40 M20,100 Q50,160 100,140 T180,160" fill="none" stroke="rgba(93,155,101,0.16)" stroke-width="4"/><circle cx="60" cy="55" r="7" fill="rgba(93,155,101,0.14)"/><circle cx="140" cy="45" r="7" fill="rgba(93,155,101,0.14)"/><circle cx="60" cy="145" r="7" fill="rgba(93,155,101,0.14)"/><circle cx="140" cy="155" r="7" fill="rgba(93,155,101,0.14)"/></svg>'),
+  radial-gradient(circle at 50% 42%, #173c4b 0%, transparent 34%),
+  linear-gradient(145deg, var(--night), #06111e 75%);
+background-size: 200px 200px, auto, auto;
+background-repeat: repeat, no-repeat, no-repeat;
   );
   filter: blur(42px);
   animation: glow-breathe 5s ease-in-out infinite;
