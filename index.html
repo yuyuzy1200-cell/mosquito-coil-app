@@ -714,21 +714,24 @@
     });
 
     resetButton.addEventListener("click", () => {
-      running = false;
-      finished = false;
-      burnProgress = 0;
+  running = false;
+  finished = false;
+  burnProgress = 0;
 
-      if (animationId) {
-        cancelAnimationFrame(animationId);
-        animationId = null;
-      }
+  if (animationId) {
+    cancelAnimationFrame(animationId);
+    animationId = null;
+  }
 
-      smoke.innerHTML = "";
-      startButton.disabled = false;
-      burnTimeInput.disabled = false;
-      statusText.textContent = "火をつけると、外側から燃え始めます";
-      draw();
-    });
+  coilColor = "#315c3a";
+  coilColorInput.value = "#315c3a";
+
+  smoke.innerHTML = "";
+  startButton.disabled = false;
+  burnTimeInput.disabled = false;
+  statusText.textContent = "火をつけると、外側から燃え始めます";
+  draw();
+});
 
     // 煙を定期的に発生（レベル1〜10で1回あたりの粒数を調整）
     function startSmokeTimer() {
