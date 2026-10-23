@@ -204,11 +204,11 @@
 
     .smoke-particle {
   position: absolute;
-  width: 10px;
+  width: 5px;
   height: 40px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.7);
-  filter: blur(4px);
+  filter: blur(3px);
   animation: smoke-rise 2.8s ease-out forwards;
 }
 
@@ -223,8 +223,8 @@
       100% {
         opacity: 0;
         transform:
-          translate(var(--drift), -95px)
-          scale(2.5);
+          translate(var(--drift), -260px)
+          scale(1.4);
       }
     }
 
@@ -700,7 +700,7 @@
       particle.style.top = `${p.y / size * 100}%`;
       particle.style.setProperty(
         "--drift",
-        `${(Math.random() - 0.5) * 42}px`
+        `${(Math.random() - 0.5) * 18}px`
       );
       particle.style.animationDuration = `${2.1 + Math.random() * 1.4}s`;
 
