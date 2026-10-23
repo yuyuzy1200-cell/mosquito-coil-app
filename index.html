@@ -604,20 +604,38 @@
       ctx.stroke();
       ctx.lineWidth = baseWidth;
 
-      // 燃焼済み部分を灰色（灰）で表示
+            // 燃焼済み部分を灰で表示（リアルな灰の質感）
       if (burnProgress > 0) {
+        const burnSteps = Math.floor(steps * burnProgress);
+
+        // 灰の本体（暖かみのある薄いグレー）
+        ctx.lineWidth = baseWidth * 0.92;
         ctx.beginPath();
-        for (let i = 0; i <= steps * burnProgress; i++) {
+        for (let i = 0; i <= burnSteps; i++) {
           const t = i / steps;
           const p = spiralPoint(t);
           if (i === 0) ctx.moveTo(p.x, p.y);
           else ctx.lineTo(p.x, p.y);
         }
-        ctx.strokeStyle = "#8a8f8c";
-        ctx.shadowColor = "rgba(160, 165, 162, 0.35)";
-        ctx.shadowBlur = 10;
+        ctx.strokeStyle = "#b9b4aa";
+        ctx.shadowColor = "rgba(60, 55, 50, 0.45)";
+        ctx.shadowBlur = 6;
         ctx.stroke();
         ctx.shadowBlur = 0;
+
+        // 灰の中心（焦げた暗い芯）
+        ctx.lineWidth = baseWidth * 0.3;
+        ctx.beginPath();
+        for (let i = 0; i <= burnSteps; i++) {
+          const t = i / steps;
+          const p = spiralPoint(t);
+          if (i === 0) ctx.moveTo(p.x, p.y);
+          else ctx.lineTo(p.x, p.y);
+        }
+        ctx.strokeStyle = "#5e5953";
+        ctx.stroke();
+
+        ctx.lineWidth = baseWidth;
       }
     }
 
