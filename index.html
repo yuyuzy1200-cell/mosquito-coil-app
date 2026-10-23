@@ -773,7 +773,7 @@
   tiltAngleValue.textContent = sliderAngle;
   viewAngleValue.textContent = viewAngle;
 
-    const widthCompensation = 1 / Math.max(0.12, Math.cos((angle * Math.PI) / 180));
+    const widthCompensation = Math.min(1.6, 1 / Math.max(0.12, Math.abs(Math.cos((angle * Math.PI) / 180))));
   stageEl.style.transform = `scaleX(${widthCompensation}) rotateY(${angle}deg) scaleY(${squash})`;
   standEl.style.transform = `scaleX(${widthCompensation}) rotateY(${-angle}deg) scaleY(${squash})`;
 
