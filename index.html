@@ -763,9 +763,17 @@
     coilColor = "#315c3a";
   coilColorInput.value = "#315c3a";
 
-  tiltAngleInput.value = 0;
+    tiltAngleInput.value = 0;
   viewAngleInput.value = 0;
   updateStageTransform();
+
+  smokeLevelInput.value = 1;
+  smokeLevel = 1;
+  smokeLevelValue.textContent = 1;
+
+  burnTimeInput.value = 1;
+  burnTimeValue.textContent = 1;
+  BURN_DURATION = 60 * 1000;
 
   smoke.innerHTML = "";
   startButton.disabled = false;
