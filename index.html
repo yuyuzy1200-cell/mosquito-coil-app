@@ -760,8 +760,12 @@
     animationId = null;
   }
 
-  coilColor = "#315c3a";
+    coilColor = "#315c3a";
   coilColorInput.value = "#315c3a";
+
+  tiltAngleInput.value = 0;
+  viewAngleInput.value = 0;
+  updateStageTransform();
 
   smoke.innerHTML = "";
   startButton.disabled = false;
