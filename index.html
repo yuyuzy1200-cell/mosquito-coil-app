@@ -523,7 +523,7 @@
       ctx.lineJoin = "round";
       const baseWidth = Math.max(22, size * 0.072);
       const offset = Math.max(2, size * 0.012);
-      const coilThickness = size * 0.3;
+      const coilThickness = size * 0.2;
       const extrusionY = coilThickness * viewTiltFactor;
       const extrusionX = coilThickness * doorTiltFactor;
 
@@ -537,7 +537,7 @@
           if (i === 0) ctx.moveTo(p.x, p.y + extrusionY);
           else ctx.lineTo(p.x, p.y + extrusionY);
         }
-        ctx.strokeStyle = shadeColor(coilColor, -25);
+        ctx.strokeStyle = shadeColor(coilColor, -40);
         ctx.stroke();
       }
 
@@ -551,7 +551,7 @@
           if (i === 0) ctx.moveTo(p.x + extrusionX, p.y);
           else ctx.lineTo(p.x + extrusionX, p.y);
         }
-        ctx.strokeStyle = shadeColor(coilColor, -25);
+        ctx.strokeStyle = shadeColor(coilColor, -40);
         ctx.stroke();
       }
 
