@@ -708,23 +708,41 @@
 
       setTimeout(() => particle.remove(), 3600);
     }
-    function playChime() {
+        function playChime() {
       try {
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         const ac = new AudioCtx();
-        [880, 660, 880].forEach((freq, i) => {
-          const osc = ac.createOscillator();
-          const gain = ac.createGain();
-          osc.type = "sine";
-          osc.frequency.value = freq;
-          const t0 = ac.currentTime + i * 0.7;
-          gain.gain.setValueAtTime(0, t0);
-          gain.gain.linearRampToValueAtTime(0.25, t0 + 0.05);
-          gain.gain.exponentialRampToValueAtTime(0.001, t0 + 1.4);
-          osc.connect(gain).connect(ac.destination);
-          osc.start(t0);
-          osc.stop(t0 + 1.5);
-        });
+        const master = ac.createGain();
+        master.gain.value = 0.9;
+        master.connect(ac.destination);
+
+        // おりんの響き：基音と、わずかにずれた倍音を重ねる
+        const partials = [
+          { f: 1046, g: 0.50, d: 7.0 },
+          { f: 2093, g: 0.22, d: 5.0 },
+          { f: 2860, g: 0.15, d: 3.5 },
+          { f: 4180, g: 0.08, d: 2.2 },
+          { f: 1052, g: 0.35, d: 7.5 } // 唸り（うなり）を作る
+        ];
+
+        const strike = (t0, volume) => {
+          partials.forEach((p) => {
+            const osc = ac.createOscillator();
+            const gain = ac.createGain();
+            osc.type = "sine";
+            osc.frequency.value = p.f;
+            gain.gain.setValueAtTime(0, t0);
+            gain.gain.linearRampToValueAtTime(p.g * volume, t0 + 0.008);
+            gain.gain.exponentialRampToValueAtTime(0.0008, t0 + p.d);
+            osc.connect(gain).connect(master);
+            osc.start(t0);
+            osc.stop(t0 + p.d + 0.1);
+          });
+        };
+
+        const now = ac.currentTime;
+        strike(now, 1.0);        // 一回目
+        strike(now + 4.5, 0.8);  // 二回目（余韻のあと）
       } catch (e) {}
     }
     function animate(now, startTime) {
