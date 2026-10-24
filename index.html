@@ -730,8 +730,11 @@
         finished = true;
         burnProgress = 1;
         draw();
-        statusText.textContent = "静かに燃え尽きました";
+                statusText.textContent = "静かに燃え尽きました";
+        document.getElementById("remaining").textContent = "残り 00:00";
         startButton.disabled = true;
+        if (navigator.vibrate) navigator.vibrate([300, 150, 300, 150, 600]);
+        playChime();
         return;
       }
 
@@ -782,6 +785,7 @@
   BURN_DURATION = 60 * 1000;
 
   smoke.innerHTML = "";
+  document.getElementById("remaining").textContent = "";
   startButton.disabled = false;
   burnTimeInput.disabled = false;
   statusText.textContent = "火をつけると、外側から燃え始めます";
