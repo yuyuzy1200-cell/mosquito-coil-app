@@ -708,7 +708,25 @@
 
       setTimeout(() => particle.remove(), 3600);
     }
-
+    function playChime() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        const ac = new AudioCtx();
+        [880, 660, 880].forEach((freq, i) => {
+          const osc = ac.createOscillator();
+          const gain = ac.createGain();
+          osc.type = "sine";
+          osc.frequency.value = freq;
+          const t0 = ac.currentTime + i * 0.7;
+          gain.gain.setValueAtTime(0, t0);
+          gain.gain.linearRampToValueAtTime(0.25, t0 + 0.05);
+          gain.gain.exponentialRampToValueAtTime(0.001, t0 + 1.4);
+          osc.connect(gain).connect(ac.destination);
+          osc.start(t0);
+          osc.stop(t0 + 1.5);
+        });
+      } catch (e) {}
+    }
     function animate(now, startTime) {
       if (!running) return;
 
