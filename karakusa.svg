@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <g fill="none" stroke="#7fc08a" stroke-opacity="0.22" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <!-- 蔓（左右がつながるS字） -->
+    <path d="M0,100 C40,40 60,40 100,100 S160,160 200,100"/>
+
+    <!-- 上の巻きひげ -->
+    <path d="M50,56 C32,50 26,26 45,20 C62,16 69,38 55,42 C47,44 42,36 49,33"/>
+    <!-- 下の巻きひげ（180度回転） -->
+    <path transform="rotate(180 100 100)" d="M50,56 C32,50 26,26 45,20 C62,16 69,38 55,42 C47,44 42,36 49,33"/>
+
+    <!-- 小さな枝の巻き -->
+    <path d="M100,100 C108,88 122,84 128,92 C132,99 124,104 119,99"/>
+    <path transform="rotate(180 100 100)" d="M100,100 C108,88 122,84 128,92 C132,99 124,104 119,99"/>
+  </g>
+
+  <g fill="#7fc08a" fill-opacity="0.18" stroke="none">
+    <!-- 葉 -->
+    <ellipse cx="78" cy="76" rx="13" ry="5.5" transform="rotate(-48 78 76)"/>
+    <ellipse cx="122" cy="124" rx="13" ry="5.5" transform="rotate(-48 122 124)"/>
+    <ellipse cx="25" cy="78" rx="11" ry="4.5" transform="rotate(35 25 78)"/>
+    <ellipse cx="175" cy="122" rx="11" ry="4.5" transform="rotate(35 175 122)"/>
+  </g>
+</svg>
