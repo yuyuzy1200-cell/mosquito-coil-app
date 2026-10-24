@@ -891,6 +891,123 @@ box-shadow: none;    }
 
     window.addEventListener("resize", resizeCanvas);
     resizeCanvas();
+    // ===== 燃えた後にダブルタップで粉々 =====
+(function () {
+  const canvas = document.getElementById('incenseCanvas');
+  const stage = canvas.parentElement;
+  const resetBtn = document.getElementById('resetButton');
+  const startBtn = document.getElementById('startButton');
+  let burnedOut = false;
+  let shattered = false;
+  let pieces = [];
+
+  // 燃え尽きた合図（おりんが鳴るタイミング）を拾う
+  try {
+    const orig = playChime;
+    playChime = function () {
+      burnedOut = true;
+      return orig.apply(this, arguments);
+    };
+  } catch (e) {}
+
+  function restore() {
+    pieces.forEach(function (p) { p.remove(); });
+    pieces = [];
+    canvas.style.visibility = '';
+    shattered = false;
+  }
+  resetBtn.addEventListener('click', function () { burnedOut = false; restore(); });
+  startBtn.addEventListener('click', function () { burnedOut = false; restore(); });
+
+  function crumble() {
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      const ctx = new AC();
+      const len = Math.floor(ctx.sampleRate * 0.5);
+      const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) {
+        d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2) * (Math.random() < 0.15 ? 1 : 0.25);
+      }
+      const s = ctx.createBufferSource();
+      s.buffer = buf;
+      const f = ctx.createBiquadFilter();
+      f.type = 'highpass';
+      f.frequency.value = 1200;
+      const g = ctx.createGain();
+      g.gain.value = 0.25;
+      s.connect(f); f.connect(g); g.connect(ctx.destination);
+      s.start();
+      setTimeout(function () { ctx.close(); }, 800);
+    } catch (e) {}
+  }
+
+  function shatter() {
+    shattered = true;
+    const ctx2d = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    const dw = canvas.offsetWidth, dh = canvas.offsetHeight;
+    const cols = 10, rows = 10;
+    const tw = Math.ceil(W / cols), th = Math.ceil(H / rows);
+    const kx = dw / W, ky = dh / H;
+
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const sx = c * tw, sy = r * th;
+        const w = Math.min(tw, W - sx), h = Math.min(th, H - sy);
+        if (w <= 0 || h <= 0) continue;
+        // 何も描かれていない欠片は作らない
+        const data = ctx2d.getImageData(sx, sy, w, h).data;
+        let has = false;
+        for (let i = 3; i < data.length; i += 4) { if (data[i] > 10) { has = true; break; } }
+        if (!has) continue;
+
+        const piece = document.createElement('canvas');
+        piece.width = w; piece.height = h;
+        piece.getContext('2d').drawImage(canvas, sx, sy, w, h, 0, 0, w, h);
+        piece.style.cssText =
+          'position:absolute;pointer-events:none;z-index:5;' +
+          'left:' + (canvas.offsetLeft + sx * kx) + 'px;' +
+          'top:' + (canvas.offsetTop + sy * ky) + 'px;' +
+          'width:' + (w * kx) + 'px;height:' + (h * ky) + 'px;';
+        stage.appendChild(piece);
+        pieces.push(piece);
+
+        const fromCenterX = (sx + w / 2) / W - 0.5;
+        const dx = fromCenterX * 260 + (Math.random() - 0.5) * 120;
+        const dy = 90 + Math.random() * 260;
+        const rot = (Math.random() - 0.5) * 540;
+        const anim = piece.animate([
+          { transform: 'translate(0,0) rotate(0deg) scale(1)', opacity: 1 },
+          { transform: 'translate(' + dx + 'px,' + dy + 'px) rotate(' + rot + 'deg) scale(0.6)', opacity: 0 }
+        ], {
+          duration: 900 + Math.random() * 700,
+          easing: 'cubic-bezier(.2,.6,.4,1)',
+          fill: 'forwards'
+        });
+        anim.onfinish = function () { piece.remove(); };
+      }
+    }
+    canvas.style.visibility = 'hidden';
+    crumble();
+  }
+
+  // ダブルタップ判定
+  let lastTime = 0, lastX = 0, lastY = 0;
+  stage.style.touchAction = 'manipulation';
+  stage.addEventListener('pointerup', function (e) {
+    const now = Date.now();
+    const near = Math.hypot(e.clientX - lastX, e.clientY - lastY) < 40;
+    if (now - lastTime < 350 && near) {
+      lastTime = 0;
+      if (burnedOut && !shattered) shatter();
+    } else {
+      lastTime = now;
+      lastX = e.clientX;
+      lastY = e.clientY;
+    }
+  });
+})();
   </script>
 </body>
 </html>
