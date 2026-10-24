@@ -423,7 +423,7 @@
     </section>
 
     <div class="status" id="status">火をつけると、外側から燃え始めます</div>
-
+　　<div class="status" id="remaining"></div>
     <div class="smoke-level">
       <label for="smokeLevel">煙の量：<span id="smokeLevelValue">5</span></label>
       <input type="range" id="smokeLevel" min="1" max="10" step="1" value="5" />
@@ -712,10 +712,16 @@
     function animate(now, startTime) {
       if (!running) return;
 
-      burnProgress = Math.min(
+            burnProgress = Math.min(
         (now - startTime) / BURN_DURATION,
         1
       );
+
+      const remainMs = Math.max(0, BURN_DURATION * (1 - burnProgress));
+      const remainSec = Math.ceil(remainMs / 1000);
+      const mm = String(Math.floor(remainSec / 60)).padStart(2, "0");
+      const ss = String(remainSec % 60).padStart(2, "0");
+      document.getElementById("remaining").textContent = `残り ${mm}:${ss}`;
 
       draw();
 
