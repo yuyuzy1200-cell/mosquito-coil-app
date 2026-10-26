@@ -1033,7 +1033,7 @@ box-shadow: none;    }
       }
       el = el.parentElement;
     }
-    const comp = Math.min(7, 1 / Math.max(0.12, k));
+    const comp = Math.min(2.5, 1 / Math.max(0.12, k));
     document.documentElement.style.setProperty('--rise-comp', comp.toFixed(2));
   }
   setInterval(update, 150);
