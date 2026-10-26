@@ -1040,6 +1040,32 @@ box-shadow: none;    }
   setInterval(update, 150);
   update();
 })();
+    // ===== 見る角度で縮んだ分、煙の上昇距離を補正 =====
+(function () {
+  const smokeEl = document.getElementById('smoke');
+  function update() {
+    let k = 1;
+    let el = smokeEl.parentElement;
+    while (el && el !== document.documentElement) {
+      const t = getComputedStyle(el).transform;
+      if (t && t !== 'none') {
+        const v = t.match(/matrix3?d?\(([^)]+)\)/);
+        if (v) {
+          const m = v[1].split(',').map(parseFloat);
+          const len = m.length === 6
+            ? Math.hypot(m[2], m[3])
+            : Math.hypot(m[4], m[5], m[6]);
+          k *= len;
+        }
+      }
+      el = el.parentElement;
+    }
+    const comp = Math.min(2.5, 1 / Math.max(0.2, k));
+    document.documentElement.style.setProperty('--rise-comp', comp.toFixed(2));
+  }
+  setInterval(update, 150);
+  update();
+})();
   </script>
 </body>
 </html>
