@@ -1079,6 +1079,56 @@ h1 {
   setInterval(update, 150);
   update();
 })();
+    // ===== ピンチで蚊取り線香を拡大 =====
+(function () {
+  const stage = document.querySelector('.stage');
+  const resetBtn = document.getElementById('resetButton');
+  if (!stage) return;
+  let zoom = 1, startDist = 0, startZoom = 1;
+  let pinching = false, lastPinch = 0;
+
+  // ブラウザ標準のピンチ拡大を止める（1本指のスクロールは残す）
+  stage.style.touchAction = 'pan-x pan-y';
+
+  function dist(t) {
+    return Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+  }
+  function apply() {
+    // 「scale」は「transform」とは別のプロパティなので、傾けの設定とぶつかりません
+    stage.style.scale = zoom;
+  }
+
+  stage.addEventListener('touchstart', function (e) {
+    if (e.touches.length === 2) {
+      pinching = true;
+      startDist = dist(e.touches);
+      startZoom = zoom;
+    }
+  }, { passive: true });
+
+  stage.addEventListener('touchmove', function (e) {
+    if (pinching && e.touches.length === 2 && startDist > 0) {
+      zoom = Math.min(3, Math.max(1, startZoom * dist(e.touches) / startDist));
+      apply();
+      lastPinch = Date.now();
+    }
+  }, { passive: true });
+
+  stage.addEventListener('touchend', function (e) {
+    if (pinching && e.touches.length < 2) {
+      pinching = false;
+      lastPinch = Date.now();
+      if (zoom < 1.05) { zoom = 1; apply(); }
+    }
+  }, { passive: true });
+
+  // ピンチ直後の指離しを「ダブルタップ」と誤判定させない
+  stage.addEventListener('pointerup', function (e) {
+    if (pinching || Date.now() - lastPinch < 400) e.stopImmediatePropagation();
+  }, true);
+
+  if (resetBtn) resetBtn.addEventListener('click', function () { zoom = 1; apply(); });
+})();
   </script>
 </body>
 </html>
