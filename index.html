@@ -433,6 +433,14 @@ box-shadow: none;    }
 h1 {
   margin-top: 0 !important;
 }
+    body.zoomed #smoke span,
+body.zoomed .smoke span {
+  filter: none !important;
+}
+.stage {
+  will-change: transform, scale;
+  backface-visibility: hidden;
+}
   </style>
 </head>
 
@@ -1096,6 +1104,7 @@ h1 {
   function apply() {
     // 「scale」は「transform」とは別のプロパティなので、傾けの設定とぶつかりません
     stage.style.scale = zoom;
+    document.body.classList.toggle('zoomed', zoom > 1.15);
   }
 
   stage.addEventListener('touchstart', function (e) {
@@ -1108,7 +1117,7 @@ h1 {
 
   stage.addEventListener('touchmove', function (e) {
     if (pinching && e.touches.length === 2 && startDist > 0) {
-      zoom = Math.min(3, Math.max(1, startZoom * dist(e.touches) / startDist));
+      zoom = Math.min(2, Math.max(1, startZoom * dist(e.touches) / startDist));
       apply();
       lastPinch = Date.now();
     }
