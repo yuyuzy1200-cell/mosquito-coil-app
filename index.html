@@ -1145,6 +1145,49 @@ body {
 
   if (resetBtn) resetBtn.addEventListener('click', function () { zoom = 1; apply(); });
 })();
+    /* 煙に触れると揺らぐ */
+(function () {
+  var last = 0;
+  function touchSmoke(x, y) {
+    var now = Date.now();
+    if (now - last < 40) return;
+    last = now;
+    var list = document.querySelectorAll('#smoke span, .smoke span');
+    for (var i = 0; i < list.length; i++) {
+      var el = list[i];
+      if (el._wob && now - el._wob < 500) continue;
+      var r = el.getBoundingClientRect();
+      var cx = r.left + r.width / 2;
+      var cy = r.top + r.height / 2;
+      var dx = cx - x;
+      var dy = cy - y;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      var reach = 70 + r.width / 2;
+      if (dist > reach) continue;
+      el._wob = now;
+      var power = 1 - dist / reach;
+      var side = (dx >= 0 ? 1 : -1) * (14 + 26 * power);
+      var tilt = side * 0.6;
+      if (el.animate) {
+        el.animate(
+          [
+            { translate: '0px 0px', rotate: '0deg' },
+            { translate: side + 'px -6px', rotate: tilt + 'deg', offset: 0.3 },
+            { translate: (-side * 0.6) + 'px -3px', rotate: (-tilt * 0.6) + 'deg', offset: 0.6 },
+            { translate: (side * 0.25) + 'px 0px', rotate: (tilt * 0.2) + 'deg', offset: 0.85 },
+            { translate: '0px 0px', rotate: '0deg' }
+          ],
+          { duration: 900, easing: 'ease-out' }
+        );
+      }
+    }
+  }
+  function onMove(e) {
+    touchSmoke(e.clientX, e.clientY);
+  }
+  document.addEventListener('pointerdown', onMove, { passive: true });
+  document.addEventListener('pointermove', onMove, { passive: true });
+})();
   </script>
 </body>
 </html>
